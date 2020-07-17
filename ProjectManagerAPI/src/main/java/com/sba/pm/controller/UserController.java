@@ -24,7 +24,7 @@ public class UserController {
 	@Autowired
 	private UserServiceImpl userService;
 	
-	@PostMapping("/user/saveOrUpdateUser")
+	@PostMapping("/saveOrUpdateUser")
 	public Integer createOrUpdate(@RequestBody UserEntity userEntity) {
 		return userService.saveOrUpdateUser(userEntity);
 	}
@@ -35,13 +35,13 @@ public class UserController {
 		
 	}
 	
-	@DeleteMapping("/user/deleteUser/{id}")
+	@DeleteMapping("/deleteUser/{id}")
 	public Integer deleteUser(@PathVariable String id) {
 		return userService.deleteUser(Integer.parseInt(id));
 	}
 
 	
-	@PostMapping("/user/updateProjectInUser")
+	@PostMapping("/updateProjectInUser")
 	public Integer updateProjectInUser(@RequestBody ProjectEntity projectEntity) {
 		return userService.updateProjectInUser(projectEntity);
 		
