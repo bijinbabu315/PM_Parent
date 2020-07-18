@@ -17,7 +17,8 @@
 	<description>Project Manager Parent Project</description>
 	<modules>
 		<module>PMDiscoveryService</module>
-		<module>ProjectManagerAPI</module>
+		<module>ProjectManagerUserAPI</module>
+		<module>ProjectManagerProjectAPI</module>
 		<module>PMZuuIAPIGateway</module>
 	</modules>
 	<build>

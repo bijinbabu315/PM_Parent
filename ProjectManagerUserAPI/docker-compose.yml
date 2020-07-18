@@ -1,0 +1,48 @@
+version: '3'
+services:
+
+  projectmanagermysqldb:
+    image: mysql:8
+    networks:
+      - projectmanager-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass@word1
+      - MYSQL_DATABASE=pmsdb 
+
+  pm-discoveryservice:
+    image: pmdiscoveryservice
+    ports:
+      - "8081:8081"
+    networks:
+      - projectmanager-mysql
+  
+  projectmanager-service:
+    image: projectmanagerapi
+    networks:
+      - projectmanager-mysql
+    environment:
+      - spring.profiles.active=dockerDb
+    depends_on:
+      - projectmanagermysqldb
+      
+  pm-zuuiapigateway:
+    image: pmzuuiapigateway
+    ports:
+      - "8095:8095"
+    environment:
+      - server.port=8095
+    networks:
+      - projectmanager-mysql
+       
+  projectmanagerui:
+    image: projectmanagerui
+    ports:
+      - "4201:4201"
+    networks:
+      - projectmanager-mysql
+    depends_on:
+      - projectmanager-service
+
+
+networks:
+  projectmanager-mysql:
