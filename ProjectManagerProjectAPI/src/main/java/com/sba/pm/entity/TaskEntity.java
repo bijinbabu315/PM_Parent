@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -39,6 +40,7 @@ public class TaskEntity {
 		@Column(name="status")
 		private Integer status;
 
+		@Transient
 		private Integer userId;
 
 		@ManyToOne(cascade = CascadeType.ALL)

@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -36,6 +37,7 @@ public class ProjectEntity {
 	@Column(name="priority")
 	private Integer priority;
 
+	@Transient
 	private Integer userId;
 
 	@OneToMany(mappedBy = "projectEntity", cascade = CascadeType.ALL)
