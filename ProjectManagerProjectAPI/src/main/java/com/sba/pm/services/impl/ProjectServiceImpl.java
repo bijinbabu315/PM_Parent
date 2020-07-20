@@ -45,10 +45,8 @@ public class ProjectServiceImpl implements IProjectService {
 		pr.setIsManager(1);
 		pr.setUserID(project.getUserId());
 		String apiURL = environment.getProperty("user.url");
-		System.err.println("API URL "+ apiURL);
 		pr.setIsDelete(false);
 		ResponseEntity<String> response = restTemplate.postForEntity(apiURL, pr, String.class);
-		System.err.println("response from user service -------------------->   " + response.getBody());
 		}
 		
 		return result;
@@ -66,7 +64,6 @@ public class ProjectServiceImpl implements IProjectService {
 		String apiURL = environment.getProperty("user.url");
 		pr.setIsDelete(true);
 		ResponseEntity<String> response = restTemplate.postForEntity(apiURL, pr, String.class);
-		System.err.println("response from user service -------------------->   " + response.getBody());
 		return projectDao.delete(id);
 	}
 }

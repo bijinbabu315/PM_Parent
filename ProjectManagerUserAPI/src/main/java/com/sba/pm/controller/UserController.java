@@ -43,7 +43,6 @@ public class UserController {
 	
 	@PostMapping("/updateProjectInUser")
 	public Integer updateProjectInUser(@RequestBody ProjectUpdateRequest projectUpdateRequest) {
-		System.err.println("request coming+++++++++++++");
 		return userService.updateProjectInUser(projectUpdateRequest);
 		
 	}

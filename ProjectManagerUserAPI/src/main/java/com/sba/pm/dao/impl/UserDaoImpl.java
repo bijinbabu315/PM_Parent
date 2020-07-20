@@ -83,7 +83,6 @@ public class UserDaoImpl implements IUserDao {
 		} finally {
 			session.close();
 		}
-System.out.println("\n\n ******************** RESULT ***************"+ result);
 		return result;
 	}
 
