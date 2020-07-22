@@ -1,7 +1,6 @@
-From openjdk:8
+FROM alpine-jdk:base
+MAINTAINER javaonfly
+COPY target/PMZuuIAPIGateway-0.0.1-SNAPSHOT.jar /opt/lib/
+ENTRYPOINT ["/usr/bin/java"]
+CMD ["-jar", "/opt/lib/PMZuuIAPIGateway-0.0.1-SNAPSHOT.jar"]
 EXPOSE 8095
-ADD target/PMZuuIAPIGateway-0.0.1-SNAPSHOT.jar PMZuuIAPIGateway-0.0.1-SNAPSHOT.jar
-
-COPY zuui-entrypoint.sh zuui-entrypoint.sh
-
-RUN chmod 755 zuui-entrypoint.sh

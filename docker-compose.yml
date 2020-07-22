@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
 
   projectmanagermysqldb:
@@ -9,56 +9,65 @@ services:
       - MYSQL_ROOT_PASSWORD=pass@word1
       - MYSQL_DATABASE=pmsdb 
 
-  discoveryservice:
-    image: pmdiscoveryservice
+  eureka-server:
+    image: eureka-server
     ports:
-      - "8081:8081"
+      - "9091:9091"
+    environment:
+      - server.port=9091
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
     networks:
       - projectmanager-network
-  
-  user-service:
-    image: projectmanageruser
+        
+  userservice:
+    image: userservice
+    restart: always
     networks:
       - projectmanager-network
     environment:
       - spring.profiles.active=dockerDb
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
+    entrypoint: java -jar /opt/lib/ProjectManagerUserAPI-0.0.1-SNAPSHOT.jar
     depends_on:
+      - eureka-server
       - projectmanagermysqldb
-      - discoveryservice
-      
-  project-service:
-    image: projectmanagerproject
+
+  projectservice:
+    image: projectservice
+    restart: always
     networks:
       - projectmanager-network
     environment:
       - spring.profiles.active=dockerDb
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
     depends_on:
+      - eureka-server
       - projectmanagermysqldb
-      - discoveryservice
-      
-  zuuiapigateway:
-    image: pmzuuiapigateway
-    ports:
-      - "8095:8095"
-    environment:
-      - server.port=8095
+    entrypoint: java -jar /opt/lib/ProjectManagerProjectAPI-0.0.1-SNAPSHOT.jar
+    
+  pmzuuiservice:
+    image: pmzuuiservice
+    restart: always
     networks:
       - projectmanager-network
+    environment:
+       - server.port=8095
+       - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
+    restart: on-failure
     depends_on:
-      - discoveryservice
-      -  user-service
-      -  project-service
-       
+      - eureka-server
+    
   projectmanagerui:
     image: projectmanagerui
     ports:
-      - "4200:4200"
+      - "4201:4201"
     networks:
       - projectmanager-network
+    environment:
+      - port=4201
     depends_on:
-      -  user-service
-      -  project-service
-
+      - userservice
+      - projectservice
 
 networks:
   projectmanager-network:
