@@ -1,0 +1,49 @@
+version: '3.5'
+services:
+
+  projectmanagermysqldb:
+    image: mysql:8
+    networks:
+      - projectmanager-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass@word1
+      - MYSQL_DATABASE=pmsdb 
+
+  eureka-server:
+    image: eureka-server
+    container_name: eureka-server
+    ports:
+      - "9091:9091"
+    environment:
+      - server.port=9091
+      - spring.application.name=eureka-server
+      - eureka.client.serviceUrl.defaultZone=http://localhost:9091/eureka
+    networks:
+      - projectmanager-network
+
+  projectservice:
+    image: projectservice
+    restart: always
+    networks:
+      - projectmanager-network
+    environment:
+      - spring.profiles.active=dockerDb
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
+    depends_on:
+      - eureka-server
+      - projectmanagermysqldb
+    entrypoint: /opt/bin/projectservice-entrypoint.sh
+  
+  pm-zuuiapigateway:
+    image: pmzuuiservice
+    ports:
+      - "8095:8095"
+    environment:
+      - server.port=8095
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
+    entrypoint: /opt/bin/zuui-entrypoint.sh
+    networks:
+      - projectmanager-network
+
+networks:
+  projectmanager-network:

@@ -11,6 +11,7 @@ services:
 
   eureka-server:
     image: eureka-server
+    container_name: eureka-server
     ports:
       - "9091:9091"
     environment:
@@ -21,20 +22,20 @@ services:
         
   userservice:
     image: userservice
-    restart: always
+    container_name: userservice
     networks:
       - projectmanager-network
     environment:
       - spring.profiles.active=dockerDb
-      - eureka.client.serviceUrl.defaultZone=http://eureka-server:9091/eureka
-    entrypoint: java -jar /opt/lib/ProjectManagerUserAPI-0.0.1-SNAPSHOT.jar
+      - eureka.client.serviceUrl.defaultZone=http://localhost:9091/eureka
+    entrypoint: /opt/bin/userservice-entrypoint.sh
     depends_on:
       - eureka-server
       - projectmanagermysqldb
 
   projectservice:
     image: projectservice
-    restart: always
+    container_name: projectservice
     networks:
       - projectmanager-network
     environment:
@@ -43,11 +44,11 @@ services:
     depends_on:
       - eureka-server
       - projectmanagermysqldb
-    entrypoint: java -jar /opt/lib/ProjectManagerProjectAPI-0.0.1-SNAPSHOT.jar
+    entrypoint: /opt/bin/projectservice-entrypoint.sh
     
   pmzuuiservice:
     image: pmzuuiservice
-    restart: always
+    container_name: pmzuuiservice
     networks:
       - projectmanager-network
     environment:
@@ -56,6 +57,7 @@ services:
     restart: on-failure
     depends_on:
       - eureka-server
+    entrypoint: /opt/bin/zuui-entrypoint.sh
     
   projectmanagerui:
     image: projectmanagerui
